@@ -419,7 +419,7 @@ class Transformer_experts(nn.Module):
             attention_parameters = self.attention_activation(logit_prob)
 
         if train == False :
-          print("===============================================================================")
+          print("\n===============================================================================")
           print("listener attention weight:",attention_parameters.data.cpu().numpy())
           print("===============================================================================")
 
