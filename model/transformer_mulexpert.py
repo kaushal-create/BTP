@@ -407,7 +407,7 @@ class Transformer_experts(nn.Module):
         q_h = torch.mean(encoder_outputs,dim=1) if config.mean_query else encoder_outputs[:,0]
         #q_h = encoder_outputs[:,0]
         logit_prob = self.decoder_key(q_h) #(bsz, num_experts)
-
+        print(logit_prob)
         if(config.topk>0):
             k_max_value, k_max_index = torch.topk(logit_prob, config.topk)
             a = np.empty([logit_prob.shape[0], self.decoder_number])
