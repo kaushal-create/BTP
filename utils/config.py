@@ -105,7 +105,7 @@ lr_coverage=0.15
 eps = 1e-12
 epochs = 10000
 
-emb_file = arg.emb_file or "vectors/glove.6B.{}d.txt".format(str(emb_dim))
+emb_file = arg.emb_file or "../drive/MyDrive/glove.6B.{}d.txt".format(str(emb_dim))
 pretrain_emb = arg.pretrain_emb
 
 save_path = arg.save_path
