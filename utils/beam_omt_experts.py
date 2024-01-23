@@ -97,8 +97,8 @@ class Beam():
         """ Walk back to construct the full hypothesis. """
         hyp = []
         for j in range(len(self.prev_ks) - 1, -1, -1):
-            hyp.append(self.next_ys[j+1][k])
-            k = self.prev_ks[j][k]
+            hyp.append(self.next_ys[j+1][int(k)])
+            k = self.prev_ks[j][int(k)].item()
 
         return list(map(lambda x: x.item(), hyp[::-1]))
 
@@ -281,8 +281,9 @@ class Translator(object):
 
         ret_sentences = []
         for d in batch_hyp:
-            ret_sentences.append(' '.join([self.model.vocab.index2word[idx] for idx in d [0]]).replace('EOS',''))
-                
+            words = [self.model.vocab.index2word.get(idx, '<UNK>') for idx in d[0]]
+            sentence = ' '.join(words).replace('EOS', '')
+            ret_sentences.append(sentence)     
         return ret_sentences#, batch_scores
 
     
