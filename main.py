@@ -47,57 +47,59 @@ elif(config.model == "experts"):
 print("MODEL USED",config.model)
 print("TRAINABLE PARAMETERS",count_parameters(model))
 
-check_iter = 2000
+check_iter = 200
 try:
     if (config.USE_CUDA):
         model.cuda()
     model = model.train()
-    best_ppl = 1000
+    print("Hello world")
+    best_ppl = 10000
     patient = 0
     writer = SummaryWriter(log_dir=config.save_path)
     weights_best = deepcopy(model.state_dict())
     data_iter = make_infinite(data_loader_tra)
     for n_iter in tqdm(range(1000)):
         loss, ppl, bce, acc = model.train_one_batch(next(data_iter),n_iter)
-        writer.add_scalars('loss', {'loss_train': loss}, n_iter)
-        writer.add_scalars('ppl', {'ppl_train': ppl}, n_iter)
-        writer.add_scalars('bce', {'bce_train': bce}, n_iter)
-        writer.add_scalars('accuracy', {'acc_train': acc}, n_iter)
+        # writer.add_scalars('loss', {'loss_train': loss}, n_iter)
+        # writer.add_scalars('ppl', {'ppl_train': ppl}, n_iter)
+        # writer.add_scalars('bce', {'bce_train': bce}, n_iter)
+        # writer.add_scalars('accuracy', {'acc_train': acc}, n_iter)
         if(config.noam):
             writer.add_scalars('lr', {'learning_rata': model.optimizer._rate}, n_iter)
 
         if((n_iter+1)%check_iter==0):    
-            model = model.eval()
-            model.epoch = n_iter
+            # model = model.eval()
+            # model.epoch = n_iter
             model.__id__logger = 0 
             loss_val, ppl_val, bce_val, acc_val, bleu_score_g, bleu_score_b= evaluate(model, data_loader_val ,ty="valid", max_dec_step=50)
-            writer.add_scalars('loss', {'loss_valid': loss_val}, n_iter)
-            writer.add_scalars('ppl', {'ppl_valid': ppl_val}, n_iter)
-            writer.add_scalars('bce', {'bce_valid': bce_val}, n_iter)
-            writer.add_scalars('accuracy', {'acc_train': acc_val}, n_iter)
+            # writer.add_scalars('loss', {'loss_valid': loss_val}, n_iter)
+            # writer.add_scalars('ppl', {'ppl_valid': ppl_val}, n_iter)
+            # writer.add_scalars('bce', {'bce_valid': bce_val}, n_iter)
+            # writer.add_scalars('accuracy', {'acc_train': acc_val}, n_iter)
             model = model.train()
-            if (config.model == "experts" and n_iter<13000):
-                continue
+            # if (config.model == "experts" and n_iter<13000):
+                # continue
+            print(ppl_val)
             if(ppl_val <= best_ppl):
                 best_ppl = ppl_val
                 patient = 0
+                print("Chal gaya finally!")
                 model.save_model(best_ppl,n_iter,0 ,0,bleu_score_g,bleu_score_b)
                 weights_best = deepcopy(model.state_dict())
             else: 
                 patient += 1
-            if(patient > 2): break
+            # if(patient > 2): break
 except KeyboardInterrupt:
     print('-' * 89)
     print('Exiting from training early')
 
-## TESTING
-model.load_state_dict({ name: weights_best[name] for name in weights_best })
-model.eval()
-model.epoch = 100
-loss_test, ppl_test, bce_test, acc_test, bleu_score_g, bleu_score_b= evaluate(model, data_loader_tst ,ty="test", max_dec_step=50)
+# ## TESTING
+# model.load_state_dict({ name: weights_best[name] for name in weights_best })
+# model.eval()
+# model.epoch = 100
+# loss_test, ppl_test, bce_test, acc_test, bleu_score_g, bleu_score_b= evaluate(model, data_loader_tst ,ty="test", max_dec_step=50)
 
-file_summary = config.save_path+"summary.txt"
-with open(file_summary, 'w') as the_file:
-    the_file.write("EVAL\tLoss\tPPL\tAccuracy\tBleu_g\tBleu_b\n")
-    the_file.write("{}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.2f}\t{:.2f}\n".format("test",loss_test,ppl_test, acc_test, bleu_score_g,bleu_score_b))
-    
+# file_summary = config.save_path+"summary.txt"
+# with open(file_summary, 'w') as the_file:
+#     the_file.write("EVAL\tLoss\tPPL\tAccuracy\tBleu_g\tBleu_b\n")
+#     the_file.write("{}\t{:.4f}\t{:.4f}\t{:.4f}\t{:.2f}\t{:.2f}\n".format("test",loss_test,ppl_test, acc_test, bleu_score_g,bleu_score_b))
