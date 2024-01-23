@@ -103,7 +103,7 @@ use_oov_emb = arg.use_oov_emb
 cov_loss_wt = 1.0
 lr_coverage=0.15
 eps = 1e-12
-epochs = 10000
+epochs = 10
 
 emb_file = arg.emb_file or "../drive/MyDrive/glove.6B.{}d.txt".format(str(emb_dim))
 pretrain_emb = arg.pretrain_emb
