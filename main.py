@@ -83,8 +83,8 @@ try:
             if(ppl_val <= best_ppl):
                 best_ppl = ppl_val
                 patient = 0
-                print("Chal gaya finally!")
                 model.save_model(best_ppl,n_iter,0 ,0,bleu_score_g,bleu_score_b)
+                print("Model saved")
                 weights_best = deepcopy(model.state_dict())
             else: 
                 patient += 1
