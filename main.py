@@ -57,7 +57,7 @@ try:
     writer = SummaryWriter(log_dir=config.save_path)
     weights_best = deepcopy(model.state_dict())
     data_iter = make_infinite(data_loader_tra)
-    for n_iter in tqdm(range(1000000)):
+    for n_iter in tqdm(range(1000)):
         loss, ppl, bce, acc = model.train_one_batch(next(data_iter),n_iter)
         writer.add_scalars('loss', {'loss_train': loss}, n_iter)
         writer.add_scalars('ppl', {'ppl_train': ppl}, n_iter)
