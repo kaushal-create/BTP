@@ -59,7 +59,7 @@ def collate_fn(data):
 def make_batch(inp,vacab):
     d = Dataset(inp,vacab)
     loader = torch.utils.data.DataLoader(dataset=d, batch_size=1, shuffle=False, collate_fn=collate_fn)
-    return iter(loader).next()
+    return next(iter(loader))
 
 data_loader_tra, data_loader_val, data_loader_tst, vocab, program_number = prepare_data_seq(batch_size=config.batch_size)
 
@@ -73,12 +73,13 @@ model = model.eval()
 
 print('Start to chat')
 context = deque(DIALOG_SIZE * ['None'], maxlen=DIALOG_SIZE)
-while(True):
-    msg = input(">>> ")
-    if(len(str(msg).rstrip().lstrip()) != 0):
-
-        context.append(str(msg).rstrip().lstrip())
-        batch = make_batch(context, vocab)
-        sent_g = model.decoder_greedy(batch,max_dec_step=30)
-        print(">>>",sent_g[0])
-        context.append(sent_g[0])
+# while(True):
+# msg = input(">>> ")
+msg = "blackmailed by some hacker on my facebook"
+if(len(str(msg).rstrip().lstrip()) != 0):
+    context.append(str(msg).rstrip().lstrip())
+    batch = make_batch(context, vocab)
+    # print(model.train_one_batch(batch))
+    sent_g = model.decoder_greedy(batch,max_dec_step=30)
+    print(">>>",sent_g[1])
+    # context.append(sent_g[0])
