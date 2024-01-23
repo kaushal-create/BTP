@@ -769,7 +769,7 @@ def print_custum(emotion,dial,ref,hyp_g,hyp_b):
     print("emotion:{}".format(emotion))
     print("Context:{}".format(dial))
     #print("Topk:{}".format(hyp_t))
-    print("Beam: {}".format(hyp_b))
+    #print("Beam: {}".format(hyp_b))
     print("Greedy:{}".format(hyp_g))
     print("Ref:{}".format(ref))
     print("----------------------------------------------------------------------")
