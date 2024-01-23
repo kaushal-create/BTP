@@ -70,22 +70,19 @@ if (config.USE_CUDA):
 model = model.eval()
 
 context = deque(DIALOG_SIZE * ['None'], maxlen=DIALOG_SIZE)
-# msg = "finally after 1 year, i will play cricket"
-msg = "blackmailed by some hacker on my facebook"
+msg = "finally after 1 year, i will play cricket"
+# msg = "blackmailed by some hacker on my facebook"
 print("Input >>> ", msg)
 if(len(str(msg).rstrip().lstrip()) != 0):
     context.append(str(msg).rstrip().lstrip())
     batch = make_batch(context, vocab)
     sent_g = model.decoder_greedy(batch,max_dec_step=30)
     print("Output >>> ",sent_g[1])
+    colors = ['green', 'blue', 'red', 'purple', 'orange', 'pink']
     labels = ['surprise', 'joy', 'anger', 'sadness', 'fear', 'love']
-    data = [f'{value:.8f}' for value in sent_g[1]]
-    data = [float(value) for value in data]
-    plt.figure(figsize=(10, 6))  # Adjust the size as needed
-    plt.bar(labels, data, color='blue')
-    print(data)
+    plt.bar(labels, sent_g[1], color=colors)
     plt.xlabel('Emotion Labels')
     plt.ylabel('Probability Scores')
     plt.title('Emotion Probability Scores')
-    plt.savefig('probability_distribution.png')
-    plt.show()
+    plt.savefig('emotion_plot.png')
+    # plt.show()
