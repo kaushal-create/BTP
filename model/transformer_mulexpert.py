@@ -526,7 +526,7 @@ class Transformer_experts(nn.Module):
                 if e == '<EOS>': break
                 else: st+= e + ' '
             sent.append(st)
-        return sent, np.squeeze(attention_parameters.data.cpu().numpy())
+        return sent, np.squeeze(attention_parameters.data.cpu().numpy()).flatten()
 
     def decoder_topk(self, batch, max_dec_step=30):
         enc_batch, _, _, enc_batch_extend_vocab, extra_zeros, _, _ = get_input_from_batch(batch)
