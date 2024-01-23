@@ -418,10 +418,9 @@ class Transformer_experts(nn.Module):
         else:
             attention_parameters = self.attention_activation(logit_prob)
 
-        if train == False :
-          print("\n===============================================================================")
-          print("listener attention weight:",attention_parameters.data.cpu().numpy())
-          print("===============================================================================")
+      # print("\n===============================================================================")
+      # print("listener attention weight:",attention_parameters.data.cpu().numpy())
+      # print("===============================================================================")
 
         if(config.oracle): attention_parameters = self.attention_activation(torch.FloatTensor(batch['target_program'])*1000).cuda()
         attention_parameters = attention_parameters.unsqueeze(-1).unsqueeze(-1) # (batch_size, expert_num, 1, 1)
@@ -527,7 +526,7 @@ class Transformer_experts(nn.Module):
                 if e == '<EOS>': break
                 else: st+= e + ' '
             sent.append(st)
-        return sent
+        return sent, np.squeeze(attention_parameters.data.cpu().numpy())
 
     def decoder_topk(self, batch, max_dec_step=30):
         enc_batch, _, _, enc_batch_extend_vocab, extra_zeros, _, _ = get_input_from_batch(batch)
