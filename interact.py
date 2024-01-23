@@ -41,7 +41,6 @@ class Dataset(data.Dataset):
         return item
 
 def collate_fn(data):
-    
     input_batch = torch.LongTensor([data[0]["context"]])
     input_mask = torch.LongTensor([data[0]["mask"]])
     if config.USE_CUDA:
@@ -63,23 +62,17 @@ def make_batch(inp,vacab):
 
 data_loader_tra, data_loader_val, data_loader_tst, vocab, program_number = prepare_data_seq(batch_size=config.batch_size)
 
-if(config.model == "trs"):
-    model = Transformer(vocab,decoder_number=program_number, model_file_path=config.save_path, is_eval=True)
-elif(config.model == "experts"):
-    model = Transformer_experts(vocab,decoder_number=program_number, model_file_path=config.save_path, is_eval=True)
+model = Transformer_experts(vocab,decoder_number=program_number, model_file_path=config.save_path, is_eval=True)
+
 if (config.USE_CUDA):
     model.cuda()
 model = model.eval()
 
-print('Start to chat')
 context = deque(DIALOG_SIZE * ['None'], maxlen=DIALOG_SIZE)
-# while(True):
-# msg = input(">>> ")
 msg = "blackmailed by some hacker on my facebook"
+print("Input >>> ", msg)
 if(len(str(msg).rstrip().lstrip()) != 0):
     context.append(str(msg).rstrip().lstrip())
     batch = make_batch(context, vocab)
-    # print(model.train_one_batch(batch))
     sent_g = model.decoder_greedy(batch,max_dec_step=30)
-    print(">>>",sent_g[1])
-    # context.append(sent_g[0])
+    print("Output >>> ",sent_g[1])
