@@ -52,7 +52,6 @@ try:
     if (config.USE_CUDA):
         model.cuda()
     model = model.train()
-    print("Hello world")
     best_ppl = 10000
     patient = 0
     writer = SummaryWriter(log_dir=config.save_path)
